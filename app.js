@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 const routerUsers = require('./routes/users');
 
 const { PORT = 3000 } = process.env;
@@ -13,4 +14,12 @@ app.listen(PORT, () => {
   console.log(`Приложение слушает порт ${PORT}`);
 });
 
+app.use(bodyParser.json());
+app.use((req, res, next) => {
+  req.user = {
+    _id: '64d79f6aad8d227a097a5d13',
+  };
+
+  next();
+});
 app.use('/users', routerUsers);
