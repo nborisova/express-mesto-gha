@@ -12,10 +12,10 @@ const cardSchema = new mongoose.Schema({
     required: true,
   },
   owner: {
-    type: ObjectId,
+    type: mongoose.Types.ObjectId,
     required: true,
   },
-  likes: { // список лайкнувших пост пользователей, массив ObjectId, по умолчанию — пустой массив (поле default)
+  likes: {
     type: Array,
     default: [],
   },
