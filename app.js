@@ -7,6 +7,8 @@ const routerCards = require('./routes/cards');
 const { PORT = 3000 } = process.env;
 const app = express();
 
+const NOT_FOUND_ERROR = 404;
+
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
 });
@@ -26,3 +28,6 @@ app.use((req, res, next) => {
 });
 app.use('/users', routerUsers);
 app.use('/cards', routerCards);
+app.use((req, res) => {
+  res.status(NOT_FOUND_ERROR).send({ message: 'Такой страницы не существует' });
+});

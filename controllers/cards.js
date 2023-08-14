@@ -1,7 +1,6 @@
 const Card = require('../models/cards');
 
 const BAD_REQUEST_ERROR = 400;
-const NOT_FOUND_ERROR = 404;
 const INTERNAL_SERVER_ERROR = 500;
 
 module.exports.getAllCards = (req, res) => {
@@ -45,13 +44,7 @@ module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(cardId, { $addToSet: { likes: _id } }, { new: true })
     .populate('owner likes')
     .then((card) => res.send(card))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-      }
-    });
+    .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' }));
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -61,11 +54,5 @@ module.exports.dislikeCard = (req, res) => {
   Card.findByIdAndUpdate(cardId, { $pull: { likes: _id } }, { new: true })
     .populate('owner likes')
     .then((card) => res.send(card))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(NOT_FOUND_ERROR).send({ message: 'Карточка не найдена' });
-      } else {
-        res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
-      }
-    });
+    .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' }));
 };
