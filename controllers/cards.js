@@ -1,7 +1,29 @@
 const Card = require('../models/cards');
 
-const BAD_REQUEST_ERROR = 400;
+const NOT_FOUND_ERROR = 404;
 const INTERNAL_SERVER_ERROR = 500;
+const BAD_REQUEST_ERROR = 400;
+const CREATED = 201;
+
+module.exports.doesCardExist = (req, res, next) => {
+  const { cardId } = req.params;
+
+  Card.findById(cardId)
+    .then((card) => {
+      if (!card) {
+        res.status(NOT_FOUND_ERROR).send({ message: 'Такой карточки нет' });
+      } else {
+        next();
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(BAD_REQUEST_ERROR).send({ message: 'Некорректно задан id карточки' });
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+      }
+    });
+};
 
 module.exports.getAllCards = (req, res) => {
   Card.find({})
@@ -17,7 +39,7 @@ module.exports.createCard = (req, res) => {
   Card.create({ name, link, owner: _id })
     .then((card) => {
       card.populate('owner')
-        .then((populatedCard) => res.send(populatedCard))
+        .then((populatedCard) => res.status(CREATED).send(populatedCard))
         .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' }));
     })
     .catch((err) => {

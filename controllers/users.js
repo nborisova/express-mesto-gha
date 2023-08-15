@@ -1,7 +1,29 @@
 const User = require('../models/users');
 
-const BAD_REQUEST_ERROR = 400;
+const NOT_FOUND_ERROR = 404;
 const INTERNAL_SERVER_ERROR = 500;
+const BAD_REQUEST_ERROR = 400;
+const CREATED = 201;
+
+const doesUserExist = (req, res, next) => {
+  const { userId } = req.params;
+
+  User.findById(userId)
+    .then((user) => {
+      if (!user) {
+        res.status(NOT_FOUND_ERROR).send({ message: 'Такого пользователя нет' });
+      } else {
+        next();
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(BAD_REQUEST_ERROR).send({ message: 'Некорректно задан id пользователя' });
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+      }
+    });
+};
 
 const getAllUsers = (req, res) => {
   User.find({})
@@ -21,7 +43,7 @@ const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then((user) => res.send(user))
+    .then((user) => res.status(CREATED).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(BAD_REQUEST_ERROR).send({ message: 'Переданы некорректные данные' });
@@ -70,6 +92,7 @@ const updateUserAvatar = (req, res) => {
 };
 
 module.exports = {
+  doesUserExist,
   getAllUsers,
   getUser,
   createUser,
