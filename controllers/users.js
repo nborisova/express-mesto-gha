@@ -1,9 +1,23 @@
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/users');
 
 const NOT_FOUND_ERROR = 404;
 const INTERNAL_SERVER_ERROR = 500;
 const BAD_REQUEST_ERROR = 400;
 const CREATED = 201;
+const UNAUTHORIZED_ERROR = 401;
+
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.send({ token });
+    })
+    .catch(() => res.status(UNAUTHORIZED_ERROR).send({ message: 'Неправильные почта или пароль' }));
+};
 
 const doesUserExist = (req, res, next) => {
   const { userId } = req.params;
@@ -40,9 +54,14 @@ const getUser = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
 
-  User.create({ name, about, avatar })
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name, about, avatar, email, password: hash,
+    }))
     .then((user) => res.status(CREATED).send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -51,6 +70,14 @@ const createUser = (req, res) => {
         res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
       }
     });
+};
+
+const getCurrentUser = (req, res) => {
+  const { user } = req.body;
+
+  User.findOne({ user })
+    .then((userData) => res.send(userData))
+    .catch(() => res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' }));
 };
 
 const updateUserProfile = (req, res) => {
@@ -92,10 +119,12 @@ const updateUserAvatar = (req, res) => {
 };
 
 module.exports = {
+  login,
   doesUserExist,
   getAllUsers,
   getUser,
   createUser,
+  getCurrentUser,
   updateUserProfile,
   updateUserAvatar,
 };
