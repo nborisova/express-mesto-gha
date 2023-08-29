@@ -4,6 +4,7 @@ const NOT_FOUND_ERROR = 404;
 const INTERNAL_SERVER_ERROR = 500;
 const BAD_REQUEST_ERROR = 400;
 const CREATED = 201;
+const FORBIDDEN = 403;
 
 module.exports.doesCardExist = (req, res, next) => {
   const { cardId } = req.params;
@@ -12,6 +13,27 @@ module.exports.doesCardExist = (req, res, next) => {
     .then((card) => {
       if (!card) {
         res.status(NOT_FOUND_ERROR).send({ message: 'Такой карточки нет' });
+      } else {
+        next();
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(BAD_REQUEST_ERROR).send({ message: 'Некорректно задан id карточки' });
+      } else {
+        res.status(INTERNAL_SERVER_ERROR).send({ message: 'На сервере произошла ошибка' });
+      }
+    });
+};
+
+module.exports.isCardOwner = (req, res, next) => {
+  const { cardId } = req.params;
+  const { _id } = req.user;
+
+  Card.findById(cardId)
+    .then((card) => {
+      if (card.owner.toString() !== _id) {
+        res.status(FORBIDDEN).send({ message: 'Недостаточно прав' });
       } else {
         next();
       }

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const {
   doesCardExist,
+  isCardOwner,
   getAllCards,
   createCard,
   deleteCard,
@@ -11,6 +12,7 @@ const {
 router.get('/', getAllCards);
 router.post('/', createCard);
 router.delete('/:cardId', doesCardExist);
+router.delete('/:cardId', isCardOwner);
 router.delete('/:cardId', deleteCard);
 router.put('/:cardId/likes', doesCardExist);
 router.put('/:cardId/likes', likeCard);

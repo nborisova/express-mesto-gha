@@ -26,6 +26,9 @@ app.use('/cards', routerCards);
 app.use((req, res) => {
   res.status(NOT_FOUND_ERROR).send({ message: 'Такой страницы не существует' });
 });
+app.use((err, req, res, next) => {
+  res.status(err.statusCode).send({ message: err.message });
+});
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
