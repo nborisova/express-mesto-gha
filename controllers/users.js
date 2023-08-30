@@ -76,10 +76,10 @@ const createUser = (req, res, next) => {
 };
 
 const getCurrentUser = (req, res, next) => {
-  const { user } = req.body;
+  const { _id } = req.user;
 
-  User.findOne({ user })
-    .then((userData) => res.send(userData))
+  User.findOne({ _id })
+    .then((user) => res.send(user))
     .catch(() => next(new InternalServerError('На сервере произошла ошибка')));
 };
 
