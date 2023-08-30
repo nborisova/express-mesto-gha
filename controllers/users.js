@@ -63,7 +63,12 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.status(CREATED).send(user))
+    .then(({
+      // eslint-disable-next-line no-shadow
+      name, about, avatar, email, _id,
+    }) => res.status(CREATED).send({
+      name, about, avatar, email, _id,
+    }))
     .catch((err) => {
       if (err.code === 11000) {
         next(new ConflictError('Пользователь с таким email уже зарегистрирован'));
