@@ -4,7 +4,7 @@ const User = require('../models/users');
 const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 const InternalServerError = require('../errors/internal-server-err');
-const UnauthorizedError = require('../errors/unauthorized-err');
+// const UnauthorizedError = require('../errors/unauthorized-err');
 const ConflictError = require('../errors/conflict-err');
 
 const CREATED = 201;
@@ -17,7 +17,7 @@ const login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
       res.send({ token });
     })
-    .catch(() => next(new UnauthorizedError('Неправильные почта или пароль')));
+    .catch(next);
 };
 
 const doesUserExist = (req, res, next) => {
@@ -95,7 +95,6 @@ const updateUserProfile = (req, res, next) => {
   User.findByIdAndUpdate(_id, { name, about }, {
     new: true,
     runValidators: true,
-    upsert: true,
   })
     .then((user) => res.send(user))
     .catch((err) => {
@@ -114,7 +113,6 @@ const updateUserAvatar = (req, res, next) => {
   User.findByIdAndUpdate(_id, { avatar }, {
     new: true,
     runValidators: true,
-    upsert: true,
   })
     .then((user) => res.send(user))
     .catch((err) => {
