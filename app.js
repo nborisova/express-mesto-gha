@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const commonRouter = require('./routes/index');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000, DB_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
 
@@ -11,7 +12,9 @@ const app = express();
 mongoose.connect(DB_URL, { useNewUrlParser: true });
 
 app.use(bodyParser.json());
+app.use(requestLogger);
 app.use(commonRouter);
+app.use(errorLogger);
 app.use(errors());
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
