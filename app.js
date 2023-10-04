@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const commonRouter = require('./routes/index');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { cors } = require('./middlewares/cors');
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
@@ -13,6 +14,7 @@ mongoose.connect(DB_URL, { useNewUrlParser: true });
 
 app.use(bodyParser.json());
 app.use(requestLogger);
+app.use(cors);
 app.use(commonRouter);
 app.use(errorLogger);
 app.use(errors());
