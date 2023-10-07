@@ -16,3 +16,7 @@
 `npm run dev` — запускает сервер с hot-reload
 
 Ссылка на репозиторий https://github.com/nborisova/express-mesto-gha.git
+
+IP  62.84.121.236
+Frontend  https://mesto-nb.nomoredomainsrocks.ru
+Backend  https://api.mesto-nb.nomoredomain.nomoredomainsrocks.ru

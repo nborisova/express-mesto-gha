@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -15,6 +16,11 @@ mongoose.connect(DB_URL, { useNewUrlParser: true });
 app.use(bodyParser.json());
 app.use(requestLogger);
 app.use(cors);
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 app.use(commonRouter);
 app.use(errorLogger);
 app.use(errors());
