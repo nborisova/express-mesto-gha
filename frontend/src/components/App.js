@@ -27,7 +27,7 @@ function App() {
   const navigate = useNavigate();
 
   const api = new Api({
-    baseUrl: 'http://api.mesto-nb.nomoredomain.nomoredomainsrocks.ru',
+    baseUrl: 'https://api.mesto-nb.nomoredomain.nomoredomainsrocks.ru',
     headers: {
       authorization: `Bearer ${localStorage.getItem('token')}`,
       'Content-Type': 'application/json'

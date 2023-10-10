@@ -1,6 +1,6 @@
 import { checkResponse } from '../utils/Api';
 
-export const BASE_URL = 'http://api.mesto-nb.nomoredomain.nomoredomainsrocks.ru';
+export const BASE_URL = 'https://api.mesto-nb.nomoredomain.nomoredomainsrocks.ru';
 
 export const register = (email, password) => {
     return fetch(`${BASE_URL}/signup`, {
