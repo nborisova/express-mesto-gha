@@ -1,6 +1,4 @@
-import React from "react";
-
-class Api {
+export class Api {
   constructor({baseUrl, headers}) {
     this._baseUrl = baseUrl;
     this._headers = headers;
@@ -88,14 +86,6 @@ class Api {
   }
 
 }
-
-export const api = new Api({
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-66',
-  headers: {
-    authorization: 'd284ed82-9920-40c8-837a-2e288dd55f54',
-    'Content-Type': 'application/json'
-  }
-});
 
 export function checkResponse(res) {
   if (res.ok) {

@@ -1,6 +1,6 @@
 import { checkResponse } from '../utils/Api';
 
-export const BASE_URL = 'https://auth.nomoreparties.co';
+export const BASE_URL = 'http://api.mesto-nb.nomoredomain.nomoredomainsrocks.ru';
 
 export const register = (email, password) => {
     return fetch(`${BASE_URL}/signup`, {
@@ -33,6 +33,6 @@ export const getUserEmail = (token) => {
         }
     })
     .then(checkResponse)
-    .then(response_data => response_data.data.email);
+    .then(response_data => response_data.email);
 }
 

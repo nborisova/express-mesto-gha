@@ -4,7 +4,7 @@ import Footer from './Footer';
 import React from 'react';
 import ImagePopup from './ImagePopup';
 import PopupWithForm from './PopupWithForm';
-import { api } from '../utils/Api';
+import { Api } from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
@@ -25,6 +25,14 @@ function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [userEmail, setUserEmail] = React.useState('');
   const navigate = useNavigate();
+
+  const api = new Api({
+    baseUrl: 'http://api.mesto-nb.nomoredomain.nomoredomainsrocks.ru',
+    headers: {
+      authorization: `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'application/json'
+    }
+  });
 
   React.useEffect(() => {
 
